@@ -38,7 +38,7 @@ function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Home">
-      <Stack.Screen options={{headerShown: false}} name="Home" component={HomeScreen}/>
+        <Stack.Screen options={{headerShown: true}} name="Home" component={HomeScreen}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

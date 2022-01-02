@@ -4,6 +4,7 @@
     "@react-native-community/masked-view": "^0.1.11",
     "@react-navigation/native": "^6.0.6",
     "@react-navigation/native-stack": "^6.2.5",
+    "axios": "^0.24.0",
     "expo": "^43.0.0",
     "native-base": "^3.2.2",
     "react": "^17.0.1",
