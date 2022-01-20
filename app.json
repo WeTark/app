@@ -1,0 +1,16 @@
+{
+    "expo": {
+     "name": "WeTark",
+     "icon": "./ic_launcher.png",
+     "version": "1.0.0",
+     "slug": "your-app-slug",
+     "ios": {
+       "bundleIdentifier": "com.wetark.app",
+       "buildNumber": "1.0.0"
+     },
+     "android": {
+       "package": "com.wetark.app",
+       "versionCode": 1
+     }
+    }
+  }

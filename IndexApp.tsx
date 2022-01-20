@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { HomeScreen } from './screen/home/Home';
+import { HomeIndex } from './screen/home/Index';
 import { LoadingScreen } from './screen/Loading';
 import { getStoreData } from './action/Store';
 import Api from './api/AuthApi';
@@ -10,6 +10,7 @@ import { Provider, useDispatch, useSelector } from 'react-redux';
 import { RootState } from './App';
 import { USER_REQUEST_SUCCESS } from './action/UseActionTypes';
 import { EventDetail } from './screen/eventDetail/Index';
+import { LoginPhone } from './screen/login/LoginPhone';
 
 const Stack = createNativeStackNavigator();
 
@@ -38,7 +39,7 @@ function IndexApp() {
       {
         userData.id?(
           <Stack.Navigator initialRouteName="EventDetail">
-            <Stack.Screen options={{headerShown: false}} name="Home" component={HomeScreen}/>
+            <Stack.Screen options={{headerShown: false}} name="Home" component={HomeIndex}/>
             <Stack.Screen options={{headerShown: false}} name="EventDetail" component={EventDetail}/>
           </Stack.Navigator>
         ):(
