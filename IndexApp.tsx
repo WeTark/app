@@ -11,6 +11,9 @@ import { RootState } from './App';
 import { USER_REQUEST_SUCCESS } from './action/UseActionTypes';
 import { EventDetail } from './screen/eventDetail/Index';
 import { LoginPhone } from './screen/login/LoginPhone';
+import { LoginOtp } from './screen/login/LoginOtp';
+import { LoginBasicDetail } from './screen/login/LoginBasicDetail';
+import { LoginPassword } from './screen/login/LoginPassword';
 
 const Stack = createNativeStackNavigator();
 
@@ -38,13 +41,17 @@ function IndexApp() {
     <NavigationContainer>
       {
         userData.id?(
-          <Stack.Navigator initialRouteName="EventDetail">
+          <Stack.Navigator initialRouteName="Home">
             <Stack.Screen options={{headerShown: false}} name="Home" component={HomeIndex}/>
             <Stack.Screen options={{headerShown: false}} name="EventDetail" component={EventDetail}/>
           </Stack.Navigator>
         ):(
           <Stack.Navigator initialRouteName="Login">
-            <Stack.Screen options={{headerShown: false}} name="Login" component={LoginScreen}/>
+            <Stack.Screen options={{headerShown: false}} name="Login" component={LoginPhone}/>
+            <Stack.Screen options={{headerShown: false}} name="LoginOtp" component={LoginOtp}/>
+            <Stack.Screen options={{headerShown: false}} name="LoginBasicDeail" component={LoginBasicDetail}/>
+            <Stack.Screen options={{headerShown: false}} name="LoginPassword" component={LoginPassword}/>
+            
           </Stack.Navigator>
         )
       }

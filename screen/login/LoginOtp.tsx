@@ -5,27 +5,31 @@ import {
     InputLeftAddon,
     Stack,
     Button,
+    Pressable,
   } from "native-base"
+import { useState } from "react";
 import Svg, { Path } from "react-native-svg"
-import { useState } from 'react';
 import AuthApi from "../../api/AuthApi";
+import { EditIcon } from "../../assets/editIcon";
+import { OtpField } from "../../utils/otpField/OtpField.component"
 
-export const LoginPhone = (props) => {
+export const LoginOtp = (props) => {
     const {navigation} = props
-    const [ phoneNo, setPhoneNo ] = useState(props?.route?.params?.phoneNo ?? '');
+    const phoneNo = props.route.params.phoneNo; 
+    const sessionId = props.route.params.session_id;
     const [ isLoading, setIsLoading ] = useState(false);
-    const openOtpScreen = () => {
-        setIsLoading(true)
-        // navigation.navigate('LoginOtp', {
-        //     phoneNo: phoneNo, 
-        //     session_id: '36faf1ef-57a0-4925-826e-c61dd9a21f95'//response.data.Details
-        // })
-        AuthApi.sendOtp(phoneNo).then(response=>{
-            setIsLoading(false);
-            if(response.data.isUserExist === true){
-                navigation.navigate('LoginPassword', {phoneNo: phoneNo, session_id: response.data.sessionId});
-            }else{
-                navigation.navigate('LoginOtp', {phoneNo: phoneNo, session_id: response.data.sessionId});
+    const [ otp, setOtp ] = useState("");
+
+    const editPhone = () => {
+        navigation.navigate('Login', {phoneNo: phoneNo})
+    }
+    
+    const verifyOtp = () => {
+        setIsLoading(true);
+        AuthApi.verifyOtp(otp, sessionId).then(response=>{
+            if(response.data.Status === "Success"){
+                setIsLoading(false);
+                navigation.navigate('LoginBasicDeail', {phoneNo: phoneNo, session_id: response.data.Details})
             }
         }).catch(e=>setIsLoading(false))
     }
@@ -35,31 +39,15 @@ export const LoginPhone = (props) => {
             <VStack flex={1}>
                 <Box flex={1}>
                     <Center>
-                        <Heading mt='40'>Let’s Begin!</Heading>
-                        <Text mt='20'>Enter your mobile number to continue</Text>
-                        <InputGroup
-                            fontSize={'18'}
-                            mt='5'
-                            w={{
-                            base: "60%",
-                            md: "285",
-                            }}
-                        >
-                            <InputLeftAddon borderTopLeftRadius={'15'} borderBottomLeftRadius={'15'} children={"+91"} />
-                            <Input
-                                type='number'
-                                maxLength={10}
-                                value={phoneNo}
-                                onChangeText={(value) => setPhoneNo(value)}
-                                borderRadius={'15'}
-                                bg={'#FFFFFF'}
-                                w={{
-                                    base: "100%",
-                                    md: "100%",
-                                }}
-                            />
-                        </InputGroup>
-                        <Button isLoading={isLoading} isDisabled={phoneNo.length != 10} _text={{fontSize:'18'}} mt={'5'} colorScheme="indigo" w='40%' borderRadius={'22'} onPress={openOtpScreen}>Continue</Button>
+                        <Heading mt='20'>Enter OTP</Heading>
+                        <Text mt='20'>Enter 4-digit OTP sent to your number</Text>
+                        <HStack mt='3.5' alignItems={'center'}>
+                            <Text>+91 {phoneNo} </Text>
+                            <Pressable onPress={editPhone}><EditIcon/></Pressable>
+                        </HStack>
+                        <Text my='5'>Resend OTP</Text>
+                        <OtpField OTP={otp} setOTP={setOtp}/>
+                        <Button isLoading={isLoading}  isDisabled={otp.length != 6} _text={{fontSize:'18'}} mt={'5'} w='40%' borderRadius={'22'} onPress={verifyOtp} colorScheme="indigo">Continue</Button>
                     </Center>
                 </Box>
                 <Center margin={'5'}>

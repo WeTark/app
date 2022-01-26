@@ -5,61 +5,65 @@ import {
     InputLeftAddon,
     Stack,
     Button,
+    Pressable,
   } from "native-base"
+import { useState } from "react";
 import Svg, { Path } from "react-native-svg"
-import { useState } from 'react';
+import { useDispatch } from "react-redux";
+import { setStoreData } from "../../action/Store";
+import { USER_REQUEST_SUCCESS } from "../../action/UseActionTypes";
 import AuthApi from "../../api/AuthApi";
+import { EditIcon } from "../../assets/editIcon";
+import { OtpField } from "../../utils/otpField/OtpField.component"
 
-export const LoginPhone = (props) => {
+export interface ILoginPassword{
+    username: string,
+    password?: string,
+}
+export const LoginPassword = (props) => {
     const {navigation} = props
-    const [ phoneNo, setPhoneNo ] = useState(props?.route?.params?.phoneNo ?? '');
     const [ isLoading, setIsLoading ] = useState(false);
-    const openOtpScreen = () => {
-        setIsLoading(true)
-        // navigation.navigate('LoginOtp', {
-        //     phoneNo: phoneNo, 
-        //     session_id: '36faf1ef-57a0-4925-826e-c61dd9a21f95'//response.data.Details
-        // })
-        AuthApi.sendOtp(phoneNo).then(response=>{
-            setIsLoading(false);
-            if(response.data.isUserExist === true){
-                navigation.navigate('LoginPassword', {phoneNo: phoneNo, session_id: response.data.sessionId});
-            }else{
-                navigation.navigate('LoginOtp', {phoneNo: phoneNo, session_id: response.data.sessionId});
-            }
+    const [ basicDetail, setBasicDetail ] = useState<ILoginPassword>({username: props.route.params.phoneNo});
+    const [ otp, setOtp ] = useState("");
+    const dispatch = useDispatch();
+
+    const registerUser = () => {
+        setIsLoading(true);
+        console.log(basicDetail)
+        AuthApi.authenticateUser(basicDetail).then(response=>{
+            setStoreData('token', response.data.accessToken);
+            dispatch({type: USER_REQUEST_SUCCESS, payload: response})
+            navigation.navigate('Home')
+            // navigation.navigate('LoginOtp', {phoneNo: phoneNo, session_id: response.data.Details})
         }).catch(e=>setIsLoading(false))
     }
+
+    const isDisabled = () => {
+        return false
+    }
+
     return(
         <View overflow={'hidden'} flex={1} bg='#F2F2F2'>
             <Circle position={'absolute'} top='-300' left={'-410'} size={'980'} bg="#6C38FF" opacity={'0.1'}/>
             <VStack flex={1}>
                 <Box flex={1}>
                     <Center>
-                        <Heading mt='40'>Let’s Begin!</Heading>
-                        <Text mt='20'>Enter your mobile number to continue</Text>
-                        <InputGroup
+                        <Heading mt='40' mb='20'>Enter Password</Heading>
+                        <Input
                             fontSize={'18'}
-                            mt='5'
+                            px='3'
+                            mt='10'
+                            placeholder="Password"
+                            value={basicDetail?.password}
+                            onChangeText={(value) => setBasicDetail({...basicDetail, password: value})}
+                            borderRadius={'15'}
+                            bg={'#FFFFFF'}
                             w={{
-                            base: "60%",
-                            md: "285",
+                                base: "60%",
+                                md: "285",
                             }}
-                        >
-                            <InputLeftAddon borderTopLeftRadius={'15'} borderBottomLeftRadius={'15'} children={"+91"} />
-                            <Input
-                                type='number'
-                                maxLength={10}
-                                value={phoneNo}
-                                onChangeText={(value) => setPhoneNo(value)}
-                                borderRadius={'15'}
-                                bg={'#FFFFFF'}
-                                w={{
-                                    base: "100%",
-                                    md: "100%",
-                                }}
-                            />
-                        </InputGroup>
-                        <Button isLoading={isLoading} isDisabled={phoneNo.length != 10} _text={{fontSize:'18'}} mt={'5'} colorScheme="indigo" w='40%' borderRadius={'22'} onPress={openOtpScreen}>Continue</Button>
+                        />
+                        <Button isLoading={isLoading}  isDisabled={isDisabled()} _text={{fontSize:'18'}} mt={'5'} w='40%' borderRadius={'22'} onPress={registerUser} colorScheme="indigo">Continue</Button>
                     </Center>
                 </Box>
                 <Center margin={'5'}>

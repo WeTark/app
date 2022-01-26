@@ -19,7 +19,10 @@ import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { IFont } from 'native-base/lib/typescript/theme/base/typography';
 import { Entypo } from '@expo/vector-icons'; 
 import { EventDetail } from '../eventDetail/Index';
-import { Home } from './Home';
+import { Home } from './screens/Home';
+import { More } from './screens/More';
+import { Wallet } from './screens/Wallet';
+import { Portfolio } from './screens/Portfolio';
 
 export const HomeIndex = ({route, navigation }) => {
   const [selected, setSelected] = React.useState(0);
@@ -48,9 +51,9 @@ export const HomeIndex = ({route, navigation }) => {
           {
             {
               0: <Home navigation={navigation}/>,
-              1: <></>,
-              2: <></>,
-              3: <></>
+              1: <Portfolio />,
+              2: <Wallet />,
+              3: <More />
             }[selected]
           }
         </Box>

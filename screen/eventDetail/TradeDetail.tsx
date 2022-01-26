@@ -1,57 +1,81 @@
 import * as React from 'react';
 import { Box, HStack, ScrollView, Text, VStack } from 'native-base';
 import { Dimensions, Pressable, View } from 'react-native';
-import { Area, CartesianGrid, Line, LineChart, Tooltip, XAxis, YAxis } from 'recharts';
+// import { Area, CartesianGrid, Line, LineChart, Tooltip,  } from 'recharts';
+import { AreaChart, Grid, XAxis, YAxis } from 'react-native-svg-charts'
+import * as shape from 'd3-shape'
+import { IEvent } from '../home/EventCard';
+import date from 'date-and-time';
 
 interface ITradeDetailProps{
     graphData: {[key: string]: number}
+    event: IEvent
 }
 
 export const TradeDetail = (props: ITradeDetailProps) => {
-    const {graphData} = props;
+    const {graphData, event} = props;
     const dimensions = Dimensions.get('window');
+
+    const getTime = (dateString) => { 
+        return date.format(new Date(dateString), 'hh:mm A')
+    }
+    const getDate = (dateString) => { 
+        return date.format(new Date(dateString), 'ddd, MMM DD YYYY')
+    }
+
     return(
         <Box bg='#FFFFFF'>
-            <LineChart
-                width={dimensions.width-10}
-                height={300}
-                data={Object.keys(graphData).map(key=> {return {name: key, Yes: graphData[key], No: 10-graphData[key]}})}
-                margin={{ top: 15, right:10, left: -30, bottom: 30 }}
-                >
-                <XAxis tick={false} label={{value: "Time ->"}} dataKey="name" />
-                <YAxis axisLine={false} domain={[0, 10]}/>
-                <Tooltip />
-                <CartesianGrid stroke="#f5f5f5" strokeDasharray="5 5" />
-                <Line type="monotone" dataKey="Yes" stroke="#49DFFC"/>
-                <Line autoReverse={true} type="monotone" dataKey="No" stroke="#FFBFC8"/>
-            </LineChart>
+            <HStack mt='4' mx='4' alignItems={'center'}>
+                <Text flex={1}>Last Traded Price</Text>
+                <HStack flex={1}>
+                    <HStack flex={1} alignItems={'center'}>
+                        <Text fontWeight={'semibold'} color={'#D2434C'}>No</Text>
+                        <Text fontWeight={'semibold'} color={'#D2434C'} bg='#FFBFC3' borderRadius={'4'} mx='2' py='1' px='2'>₹{event.noPrice}</Text>
+                    </HStack>
+                    <HStack flex={1} justifyContent={'flex-end'} alignItems={'center'}>
+                        <Text fontWeight={'semibold'} color={'#1E738E'}>Yes</Text>
+                        <Text fontWeight={'semibold'} color={'#1E738E'} bg='#A3E9FF' borderRadius={'4'} mx='2' py='1' px='2'>₹{event.yesPrice}</Text>
+                    </HStack>
+                </HStack>
+            </HStack>
+            <AreaChart
+                // style={{ flex: 1,  }}
+                yMax={10}
+                yMin={0}
+                style={{ height: 200, padding: 10 }}
+                data={Object.values(graphData)}
+                contentInset={{ top: 30, bottom: 30 }}
+                curve={shape.curveNatural}
+                svg={{ fill: 'rgba(73, 223, 252, 0.7)' }}
+            >
+                <Grid />
+            </AreaChart>
             <Box px='4'>
-                <Text>Total Trades: 3487</Text>
+                <Text>Total Trades: 100</Text>
                 <HStack mt={4}>
                     <VStack flex={1}>
                         <Text fontWeight={'bold'}>Start Date & Time</Text>
-                        <Text>21st December 2021</Text>
+                        <Text>{getTime(event.startAt)}</Text>
+                        <Text>{getDate(event.startAt)}</Text>
                     </VStack>
                     <VStack flex={1}>
                         <Text fontWeight={'bold'}>Settlement Date & Time</Text>
-                        <Text>19th January 2022</Text>
+                        <Text>{getTime(event.expireAt)}</Text>
+                        <Text>{getDate(event.expireAt)}</Text>
                     </VStack>
                 </HStack>
                 <VStack mt={4}>
                     <Text fontWeight={'bold'}>Context</Text>
-                    <Text mt={2}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Volutpat, et accumsan accumsan at malesuada. Leo dictum orci felis suscipit at ut est, enim. Elementum in tempor consequat praesent diam, felis dictum. Facilisi malesuada in sed id. Dapibus sed enim tortor eu.
-                        \nRrhoncus elementum ornare aliquam at. Praesent ornare mauris tincidunt erat ipsum nisl. Fringilla posuere augue ultrices egestas sed pharetra, malesuada sit nulla. Quis id laoreet morbi orci mauris, dolor tortor, eu et. </Text>
+                    <Text mt={2}>
+                         {event?.description}
+                    </Text>
                 </VStack>
                 <VStack mt={4}>
                     <Text fontWeight={'bold'}>Source of Settlement</Text>
-                    <Text mt={2}>www.icc-cricket.com</Text>
+                    <Text mt={2}>{event.sourceOfSettlement}</Text>
                 </VStack>
             </Box>
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
+            <Text>{"\n"}{"\n"}{"\n"}{"\n"}</Text>
         </Box>
     )
 }

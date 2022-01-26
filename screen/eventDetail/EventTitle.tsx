@@ -1,19 +1,28 @@
 import * as React from 'react';
 import { Box, Text, HStack, Center, Pressable } from 'native-base';
+import { IEvent } from '../home/EventCard';
 
 interface IEventTitleProps{
+    title: string,
+    tags: Array<string>,
     selected: number,
     setSelected: (value: number) => void
 }
 export const EventTitle = (props: IEventTitleProps) => {
-    const { selected, setSelected } = props;
+    const { title, tags, selected, setSelected } = props;
     
     return(
         <Box bg='#F6F2FF'>
             <Box px='4' py='3'>
-                <HStack><Text color='#0094FF'>#cricket  </Text><Text color='#0094FF'>#SAvsIND</Text></HStack>
-                <Text my='1' color='#000000'>Will Virat Kohli hit his 71st international century on ongoing tour against SA?</Text>
-                <Text my='2' color='#000000' opacity='0.6'>Total Trades: 3482</Text>
+                <Box style={{flexDirection:'row', flexWrap:'wrap'}}>
+                    {
+                        tags?.map(tag=>(
+                            <Pressable><Text color='#0094FF' mr='1'>#{tag['name']}</Text></Pressable>
+                        ))
+                    }
+                </Box>
+                <Text my='1' color='#000000'>{title}</Text>
+                {/* <Text my='2' color='#000000' opacity='0.6'>Total Trades: 100</Text> */}
             </Box>
             <HStack>
                 <Pressable fontWeight={selected === 0 ?'extrabold':'normal'} bg={selected === 0 ? '#F6F2FF': '#FFFFFF'} flex={1} onPress={() => setSelected(0)}>

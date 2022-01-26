@@ -1,19 +1,22 @@
 import { HStack, Stack, VStack, Text, Icon, Pressable, Avatar, Box, ScrollView, Divider } from 'native-base';
 import { Image } from 'react-native';
 
-interface IEvent{
+export interface IEvent{
     id: string
     title: string,
     description: string,
-    yesPrice: string,
-    noPrice: string,
+    yesPrice: number,
+    noPrice: number,
     picture: string,
     tags: Array<string>,
-    createdAt: string,
+    startAt: string,
+    expireAt: string,
+    sourceOfSettlement: string,
+    rcChannelId: string,
 }
 interface IEventCardProps{
     event: IEvent
-    openDetail: (eventId: string)=> void
+    openDetail: (eventId: string, title: string, imageUrl: string, tags:Array<string>)=> void
 }
 
 export const EventCard = (props: IEventCardProps) => {
@@ -35,7 +38,7 @@ export const EventCard = (props: IEventCardProps) => {
                     <HStack my='3' flex={1}>
                         <Pressable
                                 flex={1}
-                                onPress={()=>{openDetail(event.id)}}
+                                onPress={()=>{openDetail(event.id, event.title, event.picture, event.tags)}}
                         >
                             <Image
                                 source={{
@@ -45,8 +48,16 @@ export const EventCard = (props: IEventCardProps) => {
                             />
                         </Pressable>
                         <Box mx='3' flex={2} alignSelf={'center'}>
-                            <Text color={'#0094FF'}>#covid19</Text>
-                            <Pressable onPress={()=>{openDetail(event.id)}}>
+                            <Box style={{flexDirection:'row', flexWrap:'wrap'}}>
+                                {
+                                    event?.tags?.map(tag=>(
+                                        <Pressable><Text color='#0094FF' mr='1'>#{tag['name']}</Text></Pressable>
+                                    ))
+                                }
+                            </Box>
+                            <Pressable
+                                onPress={()=>{openDetail(event.id, event.title, event.picture, event.tags)}}
+                            >
                                 <Text fontSize={'15'} fontWeight={'500'}>{event.title}</Text>
                             </Pressable>
                             
@@ -73,11 +84,11 @@ export const EventCard = (props: IEventCardProps) => {
                     </HStack>
                     <HStack mt='1' mb='3'>
                         <Box flex={1} alignSelf={'center'}>
-                            <Text color={'#979797'}>6051 people are trading</Text>
+                            <Text color={'#979797'}>100 people are trading</Text>
                         </Box>
-                        <Box textAlign={'right'}>
+                        {/* <Box textAlign={'right'}>
                             <Text p='1' bg='#D3FFBF' color={'#174800'} borderRadius={'5'}>Closing soon</Text>
-                        </Box>
+                        </Box> */}
                     </HStack>
                 </VStack>
             </Box>

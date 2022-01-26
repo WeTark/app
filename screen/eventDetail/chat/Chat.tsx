@@ -1,19 +1,29 @@
-import * as React from 'react';
 import { GiftedChat } from 'react-native-gifted-chat'
 import { customtInputToolbar } from './customtInputToolbar';
 import { RealTimeAPI } from "rocket.chat.realtime.api.rxjs";
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../App';
+import { Spinner } from 'native-base';
+import { useEffect, useState } from 'react';
 
-
-export const Chat = () => {
-    const [messages, setMessages] = React.useState([]);
-
-    const eventId = 'kLD8b9EvokGL9yERS'
+interface IChatProps{
+  rcChannelId: string
+}
+export const Chat = (props: IChatProps) => {
+    const {rcChannelId} = props;
+    const [messages, setMessages] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [rcUserId, setRcUserId] = useState();
+    const userData = useSelector((state:RootState) => state.userData)
 
     const realTimeAPI =  new RealTimeAPI("wss://chat.wetark.in/websocket");realTimeAPI.connectToServer();
-    const auth = realTimeAPI.login("prabhat", "prabhat@123");
+    const auth = realTimeAPI.login(userData.phoneNo, userData.email);
 
-    React.useEffect(() => {
+    useEffect(() => {
         realTimeAPI.onMessage( message => {
+          if(message['msg'] === 'added' && message['id']){
+            setRcUserId(message['id'])
+          }
           if(message['msg'] === 'ping'){
             realTimeAPI.callMethod(
               "sendMessage",  {
@@ -24,10 +34,9 @@ export const Chat = () => {
         })
 
         realTimeAPI.getSubscription(
-          "stream-room-messages",  eventId, false
+          "stream-room-messages",  rcChannelId, false
         ).subscribe(
             (data) => {
-              console.log(data)
               setMessages(prevArray =>[
                 {
                   _id: data.fields.args[0]._id, 
@@ -48,38 +57,26 @@ export const Chat = () => {
           );
 
         loadHistory();
-        // setMessages([
-        //   {
-        //     _id: 1,
-        //     text: 'Hello developer \n  hiw',
-        //     createdAt: new Date(),
-        //     user: {
-        //       _id: 2,
-        //       name: 'React Native',
-        //       avatar: 'https://placeimg.com/140/140/any',
-        //     },
-        //   }
-        // ])
       }, [])
 
     const onSend = (messages) => {
-      console.log(messages);
       realTimeAPI.callMethod(
         "sendMessage",  {
-          "rid": eventId,
+          "rid": rcChannelId,
           "msg": messages[0].text
         } 
       ).subscribe(
-          (data) => console.log(data),
+          (data) => {},
           (err) => console.log(err),
           () => console.log('completed'));
     }
 
     const loadHistory = () => {
       realTimeAPI.callMethod(
-        "loadHistory",  eventId, null, 20, { "$date": 1480377601 }
+        "loadHistory",  rcChannelId, null, 20, { "$date": 1480377601 }
       ).subscribe(
             (data) => {
+              setIsLoading(false);
               setMessages(data.result.messages.map(message=>{
                 return {
                   _id: message._id, 
@@ -99,13 +96,21 @@ export const Chat = () => {
     }
 
     return(
-        <GiftedChat
-            messages={messages}
-            onSend={messages => onSend(messages)}
-            user={{
-                _id: "AgLXf9KeF84yNrLgn",
-            }}
-            renderInputToolbar={props => customtInputToolbar(props)}
-        />
+      <>
+        {
+           isLoading? (
+            <Spinner mt='50%' size={'lg'} color="indigo.500" />
+          ):(
+            <GiftedChat
+              messages={messages}
+              onSend={messages => onSend(messages)}
+              user={{
+                  _id: rcUserId,
+              }}
+              renderInputToolbar={props => customtInputToolbar(props)}
+            />
+          )
+        }
+      </>
     )
 }
