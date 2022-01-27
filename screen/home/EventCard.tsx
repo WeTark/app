@@ -17,10 +17,11 @@ export interface IEvent{
 interface IEventCardProps{
     event: IEvent
     openDetail: (eventId: string, title: string, imageUrl: string, tags:Array<string>)=> void
+    openEventsByTag: (tag: string, imageUrl: string)=> void
 }
 
 export const EventCard = (props: IEventCardProps) => {
-    const { event, openDetail } = props;
+    const { event, openDetail, openEventsByTag } = props;
     const insertDecimal = (num) => {
         return (num).toFixed(1);
     }
@@ -51,7 +52,7 @@ export const EventCard = (props: IEventCardProps) => {
                             <Box style={{flexDirection:'row', flexWrap:'wrap'}}>
                                 {
                                     event?.tags?.map(tag=>(
-                                        <Pressable><Text color='#0094FF' mr='1'>#{tag['name']}</Text></Pressable>
+                                        <Pressable onPress={()=>{openEventsByTag(tag['name'], tag['imageUrl'])}}><Text color='#0094FF' mr='1'>#{tag['name']}</Text></Pressable>
                                     ))
                                 }
                             </Box>

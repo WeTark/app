@@ -1,4 +1,4 @@
-import { HStack, Stack, VStack, Text, Icon, Pressable, Avatar, Box, ScrollView, Divider } from 'native-base';
+import { HStack, Stack, VStack, Text, Icon, Pressable, Avatar, Box, ScrollView, Divider, Center } from 'native-base';
 import { Image } from 'react-native';
 
 export const PortfolioCard = (props) => {
@@ -8,6 +8,12 @@ export const PortfolioCard = (props) => {
     }
     function randomIntFromInterval(min, max) { // min and max included 
         return Math.floor(Math.random() * (max - min + 1) + min)
+    }
+
+    const totalBalance = (eventAmount) => {
+        var bal = (eventAmount?.NO?.totalAmount ?? 0) + (eventAmount?.NO?.totalPendingAmount ?? 0) +
+                    (eventAmount?.YES?.totalAmount ?? 0) + (eventAmount?.YES?.totalPendingAmount ?? 0)
+        return(insertDecimal(bal))
     }
 
     return(
@@ -34,7 +40,7 @@ export const PortfolioCard = (props) => {
                         </Pressable>
                         <Box mx='3' flex={2} alignSelf={'center'}>
                             <HStack>
-                                <Text flex={0} bg='rgba(108, 56, 255, 0.2)' borderRadius={'4'} p='1'>Matched</Text>
+                                <Text bg='rgba(108, 56, 255, 0.2)' borderRadius={'4'} py='1' px='2'>Total: ₹{totalBalance(event.amount)}</Text>
                             </HStack>
                             <Pressable onPress={()=>{}}>
                                 <Text fontSize={'15'} fontWeight={'500'}>{event.title}</Text>
@@ -45,11 +51,40 @@ export const PortfolioCard = (props) => {
                     <Divider/>
                     
                     <HStack mt='1' mb='3'>
-                        <Box flex={1} alignSelf={'center'}>
-                            <Text color={'#979797'}>Invested amount: ₹{insertDecimal(randomIntFromInterval(1,6))} </Text>
+                        <Box flex={1}>
+                            <HStack flex={1} py='1' pr='1'>
+                                <Text alignSelf={'center'} color={'#D2434C'} fontWeight={'bold'} p='2'>No</Text>
+                                {/* <Divider orientation="vertical"/> */}
+                                <VStack p='2' flex={1}>
+                                    <HStack>
+                                        <Text flex={1} color={'#D2434C'}>Matched:</Text>
+                                        <Text color={'#D2434C'}>₹{insertDecimal(event?.amount?.NO?.totalAmount ?? 0)}</Text>
+                                    </HStack>
+                                    <HStack>
+                                        <Text flex={1} color={'#D2434C'}>In process:</Text>
+                                        <Text color={'#D2434C'}>₹{insertDecimal(event?.amount?.NO?.totalPendingAmount ?? 0)}</Text>
+                                    </HStack>
+                                </VStack>
+                            </HStack>
                         </Box>
-                        <Box textAlign={'right'}>
-                            <Text p='1' bg='#D3FFBF' color={'#174800'} borderRadius={'5'}>Current value: ₹{insertDecimal(randomIntFromInterval(6,9))} </Text>
+
+                        <Divider orientation="vertical" w='0.5'/>
+
+                        <Box flex={1}>
+                            <HStack flex={1} py='1' pl='1'>
+                                <Text alignSelf={'center'} color={'#1E738E'} fontWeight={'bold'} p='2'>Yes</Text>
+                                {/* <Divider orientation="vertical" /> */}
+                                <VStack p='2' flex={1}>
+                                    <HStack>
+                                        <Text flex={1} color={'#1E738E'}>Matched:</Text>
+                                        <Text color={'#1E738E'}>₹{insertDecimal(event?.amount?.YES?.totalAmount ?? 0)}</Text>
+                                    </HStack>
+                                    <HStack>
+                                        <Text flex={1} color={'#1E738E'}>In process:</Text>
+                                        <Text color={'#1E738E'}>₹{insertDecimal(event?.amount?.YES?.totalPendingAmount ?? 0)}</Text>
+                                    </HStack>
+                                </VStack>
+                            </HStack>
                         </Box>
                     </HStack>
                 </VStack>

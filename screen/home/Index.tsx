@@ -45,6 +45,10 @@ export const HomeIndex = ({route, navigation }) => {
     },
   ]
 
+  const changeTab = (key) => {
+    setSelected(key)
+  }
+
   return (
       <Box flex={1} bg='#FFFFFF' safeAreaTop>
         <Box flex={1}>
@@ -65,7 +69,7 @@ export const HomeIndex = ({route, navigation }) => {
                 py="3"
                 flex={1}
                 key={key}
-                onPress={() => setSelected(key)}>
+                onPress={() => changeTab(key)}>
 
                 <Center>
                   <Center bg={selected === key ? "#6C38FF": "#FFFFFF"} h="55" w="55" borderRadius="12">

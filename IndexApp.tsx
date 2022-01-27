@@ -14,6 +14,9 @@ import { LoginPhone } from './screen/login/LoginPhone';
 import { LoginOtp } from './screen/login/LoginOtp';
 import { LoginBasicDetail } from './screen/login/LoginBasicDetail';
 import { LoginPassword } from './screen/login/LoginPassword';
+import { EventByTag } from './screen/eventByTag/Index';
+import { Button, Pressable } from 'native-base';
+import { LeftArrowIcon } from './assets/leftArrowIcon';
 
 const Stack = createNativeStackNavigator();
 
@@ -36,14 +39,41 @@ function IndexApp() {
   if(isLoading){
     return <LoadingScreen />
   }
+  const linking = {
+    prefixes: ['https://wetark.in', 'wetark://'],
+    config: {
+      screens: {
+        Home: 'home',
+        EventDetail: 'eventdetail',
+        Login: 'login',
+      }
+    },
+  };
 
   return (
-    <NavigationContainer>
+    <NavigationContainer linking={linking}>
       {
         userData.id?(
           <Stack.Navigator initialRouteName="Home">
             <Stack.Screen options={{headerShown: false}} name="Home" component={HomeIndex}/>
             <Stack.Screen options={{headerShown: false}} name="EventDetail" component={EventDetail}/>
+            <Stack.Screen options={{
+               headerLeft: () => (
+                <Pressable mx='4' p='2' borderRadius={'10'}
+                  bg={'rgba(0, 0, 0, 0.2)'}
+                ><LeftArrowIcon/></Pressable>
+                ),
+                title:'',
+                headerStyle: {
+                  backgroundColor: '#6C38FF',
+                },
+                headerTintColor: '#FFFFFF',
+                headerTitleStyle: {
+                  fontWeight: 'bold',
+                },
+              }} name="EventByTag" component={EventByTag}
+              initialParams={{ tag: 'SAvsEng', imageUrl:'' }}
+            />
           </Stack.Navigator>
         ):(
           <Stack.Navigator initialRouteName="Login">

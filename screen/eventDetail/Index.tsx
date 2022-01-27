@@ -19,13 +19,15 @@ export const EventDetail = (props) => {
     const eventId =  props.route.params.eventId;
     const title =  props.route.params.title;
     const imageUrl = props.route.params.imageUrl;
-    const tags = props.route.params.tags;
+    const tags = props.route.params.tags.split('---');
 
     const [isLoading, setIsLoading] = useState(true);
     const [ selected, setSelected ] = useState(0);
     const [ graphData, setGraphData ] = useState({});
     const [ event, setEvent ] = useState<IEvent>();
     const dimensions = Dimensions.get('window');
+
+    const openEventsByTag = (tag, imageUrl) => props.navigation.navigate('EventByTag', {tag:tag, imageUrl: imageUrl})
 
     useEffect(()=>{
         getStoreData('token').then(token=>{
@@ -55,7 +57,7 @@ export const EventDetail = (props) => {
                                 }}
                                 style={{ height: 250}}
                             />
-                            <EventTitle title={title} tags={tags} selected={selected} setSelected={setSelected} />
+                            <EventTitle title={title} tags={tags} selected={selected} setSelected={setSelected} openEventsByTag={openEventsByTag}/>
                             {
                                 isLoading? (
                                     <Spinner mt='50%' size={'lg'} color="indigo.500" />
@@ -68,7 +70,7 @@ export const EventDetail = (props) => {
                     </>
                 ):(
                     <>
-                        <EventTitle title={title} tags={tags} selected={selected} setSelected={setSelected} />
+                        <EventTitle title={title} tags={tags} selected={selected} setSelected={setSelected} openEventsByTag={openEventsByTag}/>
                         <View style={{ backgroundColor: "#ffffff", flex: 1}}>
                             <Chat rcChannelId={event.rcChannelId}/>
                         </View>

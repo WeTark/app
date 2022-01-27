@@ -7,9 +7,10 @@ interface IEventTitleProps{
     tags: Array<string>,
     selected: number,
     setSelected: (value: number) => void
+    openEventsByTag: (tag: string, imageUrl: string)=> void
 }
 export const EventTitle = (props: IEventTitleProps) => {
-    const { title, tags, selected, setSelected } = props;
+    const { title, tags, selected, setSelected, openEventsByTag } = props;
     
     return(
         <Box bg='#F6F2FF'>
@@ -17,7 +18,7 @@ export const EventTitle = (props: IEventTitleProps) => {
                 <Box style={{flexDirection:'row', flexWrap:'wrap'}}>
                     {
                         tags?.map(tag=>(
-                            <Pressable><Text color='#0094FF' mr='1'>#{tag['name']}</Text></Pressable>
+                            <Pressable onPress={()=>{openEventsByTag(tag, '')}}><Text color='#0094FF' mr='1'>#{tag}</Text></Pressable>
                         ))
                     }
                 </Box>

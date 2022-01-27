@@ -152,12 +152,22 @@ export const BuyCard = (props: IBuyCard) => {
       
         <HStack borderTopRadius={25} bg={'#6C38FF'} alignItems="center" position='absolute' bottom='0' left='0' right='0'>
             <Box flex={1} m='4' mr='0' alignItems={'center'}>
-                <Pressable onPress={openNo}>
+                <Pressable 
+                    onPress={openNo}
+                    style={({ pressed }) => [
+                        pressed ? { opacity: 0.8 } : {},
+                    ]}
+                >
                     <Text py='2' px='12' borderRadius={'2xl'} bg='#FFCACA' fontSize={'17'} fontWeight={'bold'} color={'#333333'}>Buy No</Text>
                 </Pressable>
             </Box>
             <Box flex={1} m='4' ml='0' alignItems={'center'}>
-                <Pressable onPress={openYes}>
+                <Pressable 
+                    onPress={openYes}
+                    style={({ pressed }) => [
+                        pressed ? { opacity: 0.8 } : {},
+                    ]}
+                >
                     <Text py='2' px='12' borderRadius={'2xl'} bg='#A3E9FF' fontSize={'17'} fontWeight={'bold'} color={'#333333'}>Buy Yes</Text>
                 </Pressable>
             </Box>

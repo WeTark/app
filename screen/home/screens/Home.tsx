@@ -16,8 +16,9 @@ export const Home = ({navigation}) => {
     const [tags, setTags] = useState([]);
     const [higlightTags, setHiglightTags] = useState([]);
     
-    const openDetail = (eventId, title, imageUrl, tags) => navigation.navigate('EventDetail', {eventId: eventId, title: title, imageUrl: imageUrl, tags: tags})
-    
+    const openDetail = (eventId, title, imageUrl, tags) => {navigation.navigate('EventDetail', {eventId: eventId, title: title, imageUrl: imageUrl, tags: tags.map(row=>row.name).join('---')})}
+    const openEventsByTag = (tag, imageUrl) => navigation.navigate('EventByTag', {tag:tag, imageUrl: imageUrl})
+
     const fetchTreding = () => {
         setIsLoading(true)
         setSelectedTag('Trending')
@@ -84,7 +85,7 @@ export const Home = ({navigation}) => {
                     >
                         {
                             higlightTags.map(higlightTag=>(
-                                <Pressable mx='1'>  
+                                <Pressable mx='1' onPress={()=>openEventsByTag(higlightTag.name, higlightTag.imageUrl)}>  
                                     <Avatar width={60} imageUrl={higlightTag.imageUrl} name={higlightTag.name}/>
                                 </Pressable>
                             ))
@@ -116,7 +117,7 @@ export const Home = ({navigation}) => {
                         <Spinner mt='50%' size={'lg'} color="indigo.500" />
                     ):(
                         events.map((event, key)=>(
-                            <EventCard event={event} openDetail={openDetail} key={key}/>
+                            <EventCard event={event} openDetail={openDetail} key={key} openEventsByTag={openEventsByTag}/>
                         ))
                     )
                 }

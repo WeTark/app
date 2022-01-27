@@ -2,8 +2,8 @@ import axios from "axios";
 import { INewTrade } from "../utils/swipeButton/SwipeButton.component.web";
 
 export default class EventApi{
-    // private static baseUrl = 'https://api.wetark.in'
-    private static baseUrl = 'http://localhost:8080'
+    // private static baseUrl = 'https://prod-api.wetark.in'
+    private static baseUrl = 'http://192.168.0.8:8080'
 
     static getAllTrendingEvent(token, page, size){
         return axios.get(`${this.baseUrl}/event/all/trending?page=${page}&size=${size}`,{
