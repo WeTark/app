@@ -3,8 +3,8 @@ import { IBasicDetail } from "../screen/login/LoginBasicDetail";
 import { ILoginPassword } from "../screen/login/LoginPassword";
 
 export default class AuthApi{
-    // private static baseUrl = 'https://prod-api.wetark.in/api'
-    private static baseUrl = 'http://192.168.0.8:8080/api'
+    private static baseUrl = 'https://prod-api.wetark.in/api'
+    // private static baseUrl = 'http://192.168.0.8:8080/api'
 
     static getUser(token){
         return axios.get(`${this.baseUrl}/auth/me`,{
