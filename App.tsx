@@ -4,6 +4,7 @@ import { configureAppStore } from './store/configureAppStore';
 import { Provider } from 'react-redux';
 import IndexApp from './IndexApp';
 import { Center, NativeBaseProvider, View } from 'native-base';
+import { Platform } from 'react-native';
 
 const Stack = createNativeStackNavigator();
 const store = configureAppStore();
@@ -14,11 +15,17 @@ function App() {
   return (
     <Provider store={store}>
       <NativeBaseProvider>
-        <Center flex={1} bg={'#f2f2f2'}>
-          <View width={'100%'} flex={1} style={{maxWidth: '420px'}}>
+        {
+          Platform.OS === 'web'?(
+            <Center flex={1} bg={'#f2f2f2'}>
+              <View width={'100%'} flex={1} style={{maxWidth: '420px'}}>
+                <IndexApp />
+              </View>
+            </Center>
+          ):(
             <IndexApp />
-          </View>
-        </Center>
+          )
+        }
       </NativeBaseProvider>
     </Provider>
   );

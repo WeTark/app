@@ -53,7 +53,7 @@ export const EventDetail = (props) => {
                                 source={{
                                     uri: imageUrl,
                                 }}
-                                style={{ height: Math.round(dimensions.width * 3 / 16), width: '420px'}}
+                                style={{ height: 250}}
                             />
                             <EventTitle title={title} tags={tags} selected={selected} setSelected={setSelected} />
                             {

@@ -1,18 +1,20 @@
-import * as React from 'react';
 import {
-    Box, Center, HStack, Pressable, ScrollView, Text,
+    Box, Center, HStack, Pressable, ScrollView, Text, Spinner,
   } from 'native-base';
+import { useEffect, useState } from 'react';
 import { getStoreData } from '../../../action/Store';
 import EventApi from '../../../api/EventApi';
 import { PortfolioCard } from '../PortfolioCard';
 
 export const Portfolio = () => {
-    const [portfolioEvents, setPortfolioEvents] = React.useState([]);
-    const [ selected, setSelected ] = React.useState(0);
-    React.useEffect(()=>{
+    const [portfolioEvents, setPortfolioEvents] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [ selected, setSelected ] = useState(0);
+    useEffect(()=>{
         getStoreData('token').then(token=>{
             EventApi.getUserPortfolio(token).then(response => {
                 setPortfolioEvents(response.data)
+                setIsLoading(false)
           }).catch(e=>{})
         })
     }, [])
@@ -39,11 +41,15 @@ export const Portfolio = () => {
                 </HStack>
             </Box>
         </Box>
-        <ScrollView>
+        <ScrollView showsVerticalScrollIndicator={false}>
             {
-                portfolioEvents.map((event, key)=>(
-                    <PortfolioCard event={event} key={key}/>
-                ))
+                isLoading? (
+                    <Spinner mt='50%' size={'lg'} color="indigo.500" />
+                ):(
+                    portfolioEvents.map((event, key)=>(
+                        <PortfolioCard event={event} key={key}/>
+                    ))
+                )
             }
             <Text>{"\n"}{"\n"}{"\n"}{"\n"}</Text>
         </ScrollView>

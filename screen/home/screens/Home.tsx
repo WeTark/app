@@ -77,7 +77,7 @@ export const Home = ({navigation}) => {
                         </Pressable>
                     </HStack>
                 </HStack>
-                <Box mt='5' mb='3' ml='2'>
+                <Box mt='5' mb='3' ml='2' h='60'>
                     <ScrollView 
                         horizontal={true}                         
                         showsVerticalScrollIndicator={false}

@@ -1,7 +1,6 @@
-import Lottie from "lottie-react";
 import orderPlace from "../../assets/order-placed.json";
 import { Center, Modal, Text } from 'native-base';
-import { useState } from "react";
+import { LottieAnimation } from "../../utils/lottie/LottieAnimation.component";
 
 interface IOrderPlacedProps{
     showModal: boolean,
@@ -19,7 +18,7 @@ export const OrderPlaced = (props: IOrderPlacedProps) => {
             <Modal.Header></Modal.Header> */}
             <Modal.Body>
                 <Center>
-                    <Lottie style={{width:'60%'}} animationData={orderPlace} loop/>
+                    <LottieAnimation animationData={orderPlace}/>
                 </Center>
                 <Center><Text fontWeight={'bold'} fontSize={'20'} color={'white'}>Order Placed for {selectedType===1?'Yes':'No'}!</Text></Center>
                 <Center><Text fontSize={'15'} color={'white'}>{response?.initialSize-response?.size} Matched | {response?.size} in Process</Text></Center>
