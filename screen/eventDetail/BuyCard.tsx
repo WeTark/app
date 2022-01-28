@@ -1,9 +1,10 @@
-import { Box, Container, HStack, ScrollView, Text, useDisclose, Actionsheet, VStack, Slider, Center, Spinner } from 'native-base';
-import { useEffect, useState } from 'react';
+import { Box, Container, HStack, ScrollView, Text, useDisclose, Actionsheet, VStack, Center, Spinner } from 'native-base';
+import React, { useEffect, useState } from 'react';
 import { Dimensions, Pressable, View, Platform } from 'react-native';
 import { getStoreData } from '../../action/Store';
 import EventApi from '../../api/EventApi';
 import { EditIcon } from '../../assets/editIcon';
+import { SliderComponent } from '../../utils/slider/Slider.component';
 import { SwipeButton } from '../../utils/swipeButton/SwipeButton.component';
 import { OrderPlaced } from './OrderPlaced';
 
@@ -58,6 +59,15 @@ export const BuyCard = (props: IBuyCard) => {
         })
     }
 
+    const handlePriceSliderChange = (event, newValue) => {
+        setDoublePrice(newValue);
+    };
+
+    const handleQuantitySliderChange = (event, newValue) => {
+        setQuantity(newValue);
+    };
+    
+
     const openYes = () => {
         setSelectedType(1)
         onOpen()
@@ -108,7 +118,16 @@ export const BuyCard = (props: IBuyCard) => {
                                                         <Text flex={1} fontSize={16}>Select Price</Text>
                                                         <Text px={'4'} fontSize={16} bg='#E7E7E7' borderRadius={'4'} borderColor={'#000000'} borderWidth={'1'} fontWeight={'bold'}>₹{numberToDecimal(doublePrice/2)}</Text>
                                                     </HStack>
-                                                    <Slider ml='2%' mr='2%' width={'96%'} defaultValue={doublePrice} minValue={1} maxValue={19} step={1} colorScheme="indigo"
+                                                    <Center mx='4'>
+                                                        <SliderComponent
+                                                            min={1}
+                                                            max={19}
+                                                            value={typeof doublePrice === 'number' ? doublePrice : 0}
+                                                            onChange={handlePriceSliderChange}
+                                                            aria-labelledby="input-slider"
+                                                        />
+                                                    </Center>
+                                                    {/* <Slider ml='2%' mr='2%' width={'96%'} defaultValue={doublePrice} minValue={1} maxValue={19} step={1} colorScheme="indigo"
                                                         onChange={v => {
                                                             setDoublePrice(Math.floor(v));
                                                         }}
@@ -117,7 +136,7 @@ export const BuyCard = (props: IBuyCard) => {
                                                         <Slider.FilledTrack />
                                                         </Slider.Track>
                                                         <Slider.Thumb />
-                                                    </Slider>
+                                                    </Slider> */}
                                                 </>
                                             ):(null)
                                         }
@@ -126,7 +145,16 @@ export const BuyCard = (props: IBuyCard) => {
                                             <Text flex={1} fontSize={16}>Select Quantity</Text>
                                             <Text px={'4'} fontSize={16} bg='#E7E7E7' borderRadius={'4'} borderColor={'#000000'} borderWidth={'1'} fontWeight={'bold'}>{quantity}</Text>
                                         </HStack>
-                                        <Slider ml='2%' mr='2%' width={'96%'} defaultValue={quantity} minValue={1} maxValue={50} step={1} colorScheme="indigo"
+                                        <Center mx='4'>
+                                            <SliderComponent
+                                                min={1}
+                                                max={50}
+                                                value={typeof quantity === 'number' ? quantity : 0}
+                                                onChange={handleQuantitySliderChange}
+                                                aria-labelledby="input-slider"
+                                            />
+                                        </Center>
+                                        {/* <Slider ml='2%' mr='2%' width={'96%'} defaultValue={quantity} minValue={1} maxValue={50} step={1} colorScheme="indigo"
                                             onChange={v => {
                                                 setQuantity(Math.floor(v));
                                             }}
@@ -135,7 +163,7 @@ export const BuyCard = (props: IBuyCard) => {
                                             <Slider.FilledTrack />
                                             </Slider.Track>
                                             <Slider.Thumb />
-                                        </Slider>
+                                        </Slider> */}
                                         <HStack my='4'>
                                             <Center flex={1}><Text fontWeight={'semibold'}>Investment ₹{numberToDecimal(quantity*doublePrice/2)}</Text></Center>
                                             <Center flex={1}><Text fontWeight={'semibold'}>Potential Gain ₹{numberToDecimal(10*quantity-quantity*doublePrice/2)}</Text></Center>
